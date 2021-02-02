@@ -1,0 +1,31 @@
+diff --git a/include/ua_client.h b/include/ua_client.h
+index 8138cd3..f011df9 100644
+--- a/include/ua_client.h
++++ b/include/ua_client.h
+@@ -80,6 +80,8 @@ UA_Client UA_EXPORT * UA_Client_new(UA_ClientConfig config);
+ /* Get the client connection status */
+ UA_ClientState UA_EXPORT UA_Client_getState(UA_Client *client);
+ 
++UA_ConnectionState UA_EXPORT UA_Client_getConnectionState(UA_Client *client);
++
+ /* Reset a client */
+ void UA_EXPORT UA_Client_reset(UA_Client *client);
+ 
+diff --git a/src/client/ua_client.c b/src/client/ua_client.c
+index 05c6365..e3b41a8 100644
+--- a/src/client/ua_client.c
++++ b/src/client/ua_client.c
+@@ -71,6 +71,13 @@ UA_ClientState UA_EXPORT UA_Client_getState(UA_Client *client) {
+     return client->state;
+ }
+ 
++UA_ConnectionState UA_Client_getConnectionState(UA_Client *client) {
++    if(!client)
++        return UA_CONNECTION_CLOSED;
++    UA_Connection* conn = &client->connection;
++    return conn->state;
++}
++
+ /*************************/
+ /* Manage the Connection */
+ /*************************/
