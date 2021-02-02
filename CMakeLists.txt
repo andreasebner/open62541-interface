@@ -14,15 +14,16 @@ include(ExternalProject)
    #GIT_TAG "2cabd7c5d960dadcebc75c194daafc09cfa74ce2" // Tag during the first integration Meeting
    PREFIX "${CMAKE_BINARY_DIR}/open62541_src"
    CMAKE_ARGS
-   "-DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/open62541"
+#   "-DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/open62541"
    "-DUA_ENABLE_AMALGAMATION=On"
-  #"-DUA_ENABLE_GENERATE_NAMESPACE0=On"
+   "-DBUILD_SHARED_LIBS=ON"
    "-DUA_ENABLE_METHODCALLS=ON"
    "-DUA_ENABLE_NODEMANAGEMENT=ON"
    "-DUA_ENABLE_SUBSCRIPTIONS=ON"
-  #"-DUA_ENABLE_ENABLE_MULTITHREADING=ON"
    "-DUA_LOGLEVEL=300"
    "-DCMAKE_BUILD_TYPE=DEBUG"
+  #"-DUA_ENABLE_GENERATE_NAMESPACE0=On"
+  #"-DUA_ENABLE_ENABLE_MULTITHREADING=ON"
    #PATCH_COMMAND git apply < ${PROJECT_SOURCE_DIR}/locale.patch
   )
 #add_custom_target(copyOpen62541Header ALL
@@ -65,7 +66,7 @@ include(ExternalProject)
 #add_dependencies(${PROJECT_NAME} external-open62541)
 #install(TARGETS ${PROJECT_NAME} DESTINATION include/${PROJECT_NAME})
 
-install(FILES ${CMAKE_BINARY_DIR}/open62541_src/src/external-open62541-build/open62541.h DESTINATION include/${PROJECT_NAME})
+#install(FILES ${CMAKE_BINARY_DIR}/open62541_src/src/external-open62541-build/open62541.h DESTINATION include/${PROJECT_NAME})
 
 
 include(${CMAKE_SOURCE_DIR}/cmake/create_cmake_config_files.cmake)
