@@ -9,7 +9,8 @@ include(${CMAKE_SOURCE_DIR}/cmake/set_version_numbers.cmake)
 include(ExternalProject)
  ExternalProject_Add(external-open62541
    GIT_REPOSITORY "https://github.com/open62541/open62541.git"
-   GIT_TAG "93e79321c1b40bbdada49f3bf3d52095b8f64100"
+   GIT_TAG "v0.2.2"
+   #GIT_TAG "93e79321c1b40bbdada49f3bf3d52095b8f64100"
    #GIT_TAG "0.2-rc2" // Array outlier occure
    #GIT_TAG "2cabd7c5d960dadcebc75c194daafc09cfa74ce2" // Tag during the first integration Meeting
    PREFIX "${CMAKE_BINARY_DIR}/open62541_src"
@@ -29,52 +30,12 @@ include(ExternalProject)
    "-D${PROJECT_NAME}_BUILDVERSION=${${PROJECT_NAME}_BUILDVERSION}"
   #"-DUA_ENABLE_GENERATE_NAMESPACE0=On"
   #"-DUA_ENABLE_ENABLE_MULTITHREADING=ON"
-   PATCH_COMMAND git apply < ${PROJECT_SOURCE_DIR}/cmakefile.patch
+   #PATCH_COMMAND git apply < ${PROJECT_SOURCE_DIR}/cmakefile.patch
   )
-#add_custom_target(copyOpen62541Header ALL
-#                DEPENDS external-open62541
-#                COMMAND ${CMAKE_COMMAND} -E copy
-#${CMAKE_BINARY_DIR}/open62541_src/src/external-open62541-build/open62541.h
-#${CMAKE_SOURCE_DIR}/include/open62541.h
-#)
-#add_custom_target(copyOpen62541Source ALL
-#                  DEPENDS external-open62541
-#                  COMMAND ${CMAKE_COMMAND} -E copy
-#                 ${CMAKE_BINARY_DIR}/open62541_src/src/external-open62541-build/open62541.c
-#                 ${CMAKE_SOURCE_DIR}/src/open62541.c
-#)
-
-        # file(RENAME <oldname> <newname>)
-        #file(COPY ${CMAKE_SOURCE_DIR}/src/open62541.c DESTINATION ${CMAKE_SOURCE_DIR}/src/open62541.bak)
-        #file(COPY ${CMAKE_SOURCE_DIR}/include/open62541.h DESTINATION ${CMAKE_SOURCE_DIR}/include/open62541.bak)
-
-#set(BUILD_SHARED_LIBS ON CACHE BOOL "skk" FORCE)
-#set(UA_ENABLE_AMALGAMATION ON CACHE BOOL "" FORCE)
-#set(UA_ENABLE_GENERATE_NAMESPACE0 ON CACHE BOOL "" FORCE)
-#set(UA_ENABLE_METHODCALLS ON CACHE BOOL "" FORCE)
-#set(UA_ENABLE_NODEMANAGEMENT ON CACHE BOOL "" FORCE)
-#set(UA_ENABLE_SUBSCRIPTIONS ON CACHE BOOL "" FORCE)
-#set(UA_LOGLEVEL 300 CACHE STRING "" FORCE)
-#add_subdirectory(open62541)
-#set_target_properties(open62541 PROPERTIES OUTPUT_NAME ${PROJECT_NAME})
-#set_target_properties(open62541 PROPERTIES SOVERSION 0 VERSION "${${PROJECT_NAME}_MAJOR_VERSION}.${${PROJECT_NAME}_MINOR_VERSION}.${${PROJECT_NAME}_PATCH_VERSION}")
-
-#set(${PROJECT_NAME}_VERSION ${${PROJECT_NAME}_MAJOR_VERSION}.${${PROJECT_NAME}_MINOR_VERSION}.${${PROJECT_NAME}_PATCH_VERSION})
-
-#set(${PROJECT_NAME}_SOVERSION ${${PROJECT_NAME}_MAJOR_VERSION}.${${PROJECT_NAME}_MINOR_VERSION})
-#set(${PROJECT_NAME}_BUILDVERSION $ENV{PROJECT_BUILDVERSION})
-#if( ${PROJECT_NAME}_BUILDVERSION )
-#  set(${PROJECT_NAME}_SOVERSION "${${PROJECT_NAME}_SOVERSION}${${PROJECT_NAME}_BUILDVERSION}")
-#endif( ${PROJECT_NAME}_BUILDVERSION )
-
-#add_library(${PROJECT_NAME} ${CMAKE_BINARY_DIR}/open62541_src/src/external-open62541-build/open62541.c)
-#add_dependencies(${PROJECT_NAME} external-open62541)
-#add_library(${PROJECT_NAME} SHARED IMPORTED)
-#set_property(TARGET ${PROJECT_NAME} PROPERTY IMPORTED_LOCATION ${CMAKE_BINARY_DIR}/open62541_install/lib/)
-#install(TARGETS ${PROJECT_NAME} DESTINATION include/${PROJECT_NAME})
-
 install(FILES ${CMAKE_BINARY_DIR}/open62541_install/include/open62541.h DESTINATION include)
 install(DIRECTORY ${CMAKE_BINARY_DIR}/open62541_install/lib/ DESTINATION lib )
 
-
+set(${PROJECT_NAME}_INCLUDE_DIRS "${CMAKE_INSTALL_PREFIX}/include")
+set(${PROJECT_NAME}_LIBRARIES "${PROJECT_NAME}")
+set(${PROJECT_NAME}_LIBRARY_DIRS "${CMAKE_INSTALL_PREFIX}/lib")
 include(${CMAKE_SOURCE_DIR}/cmake/create_cmake_config_files.cmake)

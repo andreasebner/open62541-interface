@@ -1,61 +1,60 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 055f1d2..eefe2e0 100644
+index 5e95ad2..0c644f5 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1,6 +1,7 @@
- cmake_minimum_required(VERSION 2.8.11)
- project(open62541)
- # set(CMAKE_VERBOSE_MAKEFILE ON)
-+message(STATUS "Parent project name: ${CMAKE_PROJECT_NAME}")
- 
- set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/tools/cmake")
- find_package(PythonInterp REQUIRED)
-@@ -10,10 +11,11 @@ find_package(Git)
+@@ -10,10 +10,11 @@ find_package(Git)
  # Version #
  ###########
  
 -set(OPEN62541_VER_MAJOR 0)
 -set(OPEN62541_VER_MINOR 2)
--set(OPEN62541_VER_PATCH 0)
+-set(OPEN62541_VER_PATCH 2)
 +set(OPEN62541_VER_MAJOR ${${CMAKE_PROJECT_NAME}_MAJOR_VERSION})
 +set(OPEN62541_VER_MINOR ${${CMAKE_PROJECT_NAME}_MINOR_VERSION})
 +set(OPEN62541_VER_PATCH ${${CMAKE_PROJECT_NAME}_PATCH_VERSION})
- set(OPEN62541_VER_LABEL "-rc2") # Appended to the X.Y.Z version format. For example "-rc1" or an empty string
+ set(OPEN62541_VER_LABEL "") # Appended to the X.Y.Z version format. For example "-rc1" or an empty string
 +set(OPEN62541_BUILDVERSION ${${CMAKE_PROJECT_NAME}_BUILDVERSION})
  
- # Set OPEN62541_VER_COMMIT
- if(GIT_FOUND)
-@@ -390,17 +392,19 @@ else()
-         set_source_files_properties(${lib_sources} PROPERTIES LANGUAGE CXX)
-     endif()
- endif()
--add_library(open62541 $<TARGET_OBJECTS:open62541-object>)
--target_link_libraries(open62541 ${open62541_LIBRARIES})
-+add_library(${CMAKE_PROJECT_NAME} $<TARGET_OBJECTS:open62541-object>)
-+target_link_libraries(${CMAKE_PROJECT_NAME} ${open62541_LIBRARIES})
+ set(LIB_INSTALL_DIR lib CACHE PATH "Installation path of libraries")
  
+@@ -405,7 +406,7 @@ if(UA_ENABLE_AMALGAMATION)
+                      )
+ 
+ 
+-    add_library(open62541 $<TARGET_OBJECTS:open62541-object>)
++    add_library(${CMAKE_PROJECT_NAME} $<TARGET_OBJECTS:open62541-object>)
+ 
+     if(UA_COMPILE_AS_CXX)
+         set_source_files_properties(${PROJECT_BINARY_DIR}/open62541.c PROPERTIES LANGUAGE CXX)
+@@ -444,16 +445,18 @@ endif()
+ 
+ # Export Symbols
  target_compile_definitions(open62541-object PRIVATE -DUA_DYNAMIC_LINKING_EXPORT)
 -target_compile_definitions(open62541 PRIVATE -DUA_DYNAMIC_LINKING_EXPORT)
 +target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE -DUA_DYNAMIC_LINKING_EXPORT)
  
+ # DLL requires linking to dependencies
+-target_link_libraries(open62541 ${open62541_LIBRARIES})
++target_link_libraries(${CMAKE_PROJECT_NAME} ${open62541_LIBRARIES})
+ 
+ # Always generate the amalgamated header
+-add_dependencies(open62541 open62541-amalgamation-header)
++add_dependencies(${CMAKE_PROJECT_NAME} open62541-amalgamation-header)
+ 
  # Generate properly versioned shared library links on Linux
 -SET_TARGET_PROPERTIES(open62541 PROPERTIES SOVERSION 0 VERSION "${OPEN62541_VER_MAJOR}.${OPEN62541_VER_MINOR}.${OPEN62541_VER_PATCH}")
 +SET_TARGET_PROPERTIES(${CMAKE_PROJECT_NAME} PROPERTIES 
-+  SOVERSION "${OPEN62541_VER_MAJOR}.${OPEN62541_VER_MINOR}${OPEN62541_BUILDVERSION}" 
-+  VERSION   "${OPEN62541_VER_MAJOR}.${OPEN62541_VER_MINOR}${OPEN62541_BUILDVERSION}.${OPEN62541_VER_PATCH}")
- 
- if(WIN32)
--    target_link_libraries(open62541 ws2_32)
-+    target_link_libraries(${CMAKE_PROJECT_NAME} ws2_32)
- endif()
++   SOVERSION  "${OPEN62541_VER_MAJOR}.${OPEN62541_VER_MINOR}${OPEN62541_BUILDVERSION}"
++   VERSION "${OPEN62541_VER_MAJOR}.${OPEN62541_VER_MINOR}${OPEN62541_BUILDVERSION}.${OPEN62541_VER_PATCH}")
  
  ##########################
-@@ -455,7 +459,7 @@ add_dependencies(lint open62541)
+ # Build Selected Targets #
+@@ -505,7 +508,7 @@ add_dependencies(lint open62541)
  # Enable shared library with `-DBUILD_SHARED_LIBS=ON`
  
  # export library (either static or shared depending on BUILD_SHARED_LIBS)
 -install(TARGETS open62541
 +install(TARGETS ${CMAKE_PROJECT_NAME}
-         LIBRARY DESTINATION lib
-         ARCHIVE DESTINATION lib)
+         LIBRARY DESTINATION ${LIB_INSTALL_DIR} 
+         ARCHIVE DESTINATION ${LIB_INSTALL_DIR}) 
  # export amalgamated header open62541.h which is generated due to build of open62541-object
