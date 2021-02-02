@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 055f1d2..7217939 100644
+index 055f1d2..eefe2e0 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -1,6 +1,7 @@
@@ -10,7 +10,7 @@ index 055f1d2..7217939 100644
  
  set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/tools/cmake")
  find_package(PythonInterp REQUIRED)
-@@ -10,9 +11,9 @@ find_package(Git)
+@@ -10,10 +11,11 @@ find_package(Git)
  # Version #
  ###########
  
@@ -21,9 +21,11 @@ index 055f1d2..7217939 100644
 +set(OPEN62541_VER_MINOR ${${CMAKE_PROJECT_NAME}_MINOR_VERSION})
 +set(OPEN62541_VER_PATCH ${${CMAKE_PROJECT_NAME}_PATCH_VERSION})
  set(OPEN62541_VER_LABEL "-rc2") # Appended to the X.Y.Z version format. For example "-rc1" or an empty string
++set(OPEN62541_BUILDVERSION ${${CMAKE_PROJECT_NAME}_BUILDVERSION})
  
  # Set OPEN62541_VER_COMMIT
-@@ -390,17 +391,17 @@ else()
+ if(GIT_FOUND)
+@@ -390,17 +392,19 @@ else()
          set_source_files_properties(${lib_sources} PROPERTIES LANGUAGE CXX)
      endif()
  endif()
@@ -38,7 +40,9 @@ index 055f1d2..7217939 100644
  
  # Generate properly versioned shared library links on Linux
 -SET_TARGET_PROPERTIES(open62541 PROPERTIES SOVERSION 0 VERSION "${OPEN62541_VER_MAJOR}.${OPEN62541_VER_MINOR}.${OPEN62541_VER_PATCH}")
-+SET_TARGET_PROPERTIES(${CMAKE_PROJECT_NAME} PROPERTIES SOVERSION "${OPEN62541_VER_MAJOR}.${OPEN62541_VER_MINOR}" VERSION "${OPEN62541_VER_MAJOR}.${OPEN62541_VER_MINOR}.${OPEN62541_VER_PATCH}")
++SET_TARGET_PROPERTIES(${CMAKE_PROJECT_NAME} PROPERTIES 
++  SOVERSION "${OPEN62541_VER_MAJOR}.${OPEN62541_VER_MINOR}${OPEN62541_BUILDVERSION}" 
++  VERSION   "${OPEN62541_VER_MAJOR}.${OPEN62541_VER_MINOR}${OPEN62541_BUILDVERSION}.${OPEN62541_VER_PATCH}")
  
  if(WIN32)
 -    target_link_libraries(open62541 ws2_32)
@@ -46,7 +50,7 @@ index 055f1d2..7217939 100644
  endif()
  
  ##########################
-@@ -455,7 +456,7 @@ add_dependencies(lint open62541)
+@@ -455,7 +459,7 @@ add_dependencies(lint open62541)
  # Enable shared library with `-DBUILD_SHARED_LIBS=ON`
  
  # export library (either static or shared depending on BUILD_SHARED_LIBS)

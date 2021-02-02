@@ -1,10 +1,10 @@
 project(open62541-interface)
 cmake_minimum_required(VERSION 3.5)
 
-SET(${PROJECT_NAME}_MAJOR_VERSION 01)
+SET(${PROJECT_NAME}_MAJOR_VERSION 00)
 SET(${PROJECT_NAME}_MINOR_VERSION 01)
 SET(${PROJECT_NAME}_PATCH_VERSION 00)
-#include(${CMAKE_SOURCE_DIR}/cmake/set_version_numbers.cmake)
+include(${CMAKE_SOURCE_DIR}/cmake/set_version_numbers.cmake)
 
 include(ExternalProject)
  ExternalProject_Add(external-open62541
@@ -26,6 +26,7 @@ include(ExternalProject)
    "-D${PROJECT_NAME}_MAJOR_VERSION=${${PROJECT_NAME}_MAJOR_VERSION}"
    "-D${PROJECT_NAME}_MINOR_VERSION=${${PROJECT_NAME}_MINOR_VERSION}"
    "-D${PROJECT_NAME}_PATCH_VERSION=${${PROJECT_NAME}_PATCH_VERSION}"
+   "-D${PROJECT_NAME}_BUILDVERSION=${${PROJECT_NAME}_BUILDVERSION}"
   #"-DUA_ENABLE_GENERATE_NAMESPACE0=On"
   #"-DUA_ENABLE_ENABLE_MULTITHREADING=ON"
    PATCH_COMMAND git apply < ${PROJECT_SOURCE_DIR}/cmakefile.patch
