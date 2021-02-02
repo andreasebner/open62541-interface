@@ -1,9 +1,9 @@
 project(open62541-interface)
 cmake_minimum_required(VERSION 3.5)
 
-#SET(${PROJECT_NAME}_MAJOR_VERSION 00)
-#SET(${PROJECT_NAME}_MINOR_VERSION 01)
-#SET(${PROJECT_NAME}_PATCH_VERSION 00)
+SET(${PROJECT_NAME}_MAJOR_VERSION 01)
+SET(${PROJECT_NAME}_MINOR_VERSION 01)
+SET(${PROJECT_NAME}_PATCH_VERSION 00)
 #include(${CMAKE_SOURCE_DIR}/cmake/set_version_numbers.cmake)
 
 include(ExternalProject)
@@ -14,7 +14,8 @@ include(ExternalProject)
    #GIT_TAG "2cabd7c5d960dadcebc75c194daafc09cfa74ce2" // Tag during the first integration Meeting
    PREFIX "${CMAKE_BINARY_DIR}/open62541_src"
    CMAKE_ARGS
-#   "-DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/open62541"
+   "-DCMAKE_PROJECT_NAME=${PROJECT_NAME}"
+   "-DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/open62541_install"
    "-DUA_ENABLE_AMALGAMATION=On"
    "-DBUILD_SHARED_LIBS=ON"
    "-DUA_ENABLE_METHODCALLS=ON"
@@ -22,9 +23,12 @@ include(ExternalProject)
    "-DUA_ENABLE_SUBSCRIPTIONS=ON"
    "-DUA_LOGLEVEL=300"
    "-DCMAKE_BUILD_TYPE=DEBUG"
+   "-D${PROJECT_NAME}_MAJOR_VERSION=${${PROJECT_NAME}_MAJOR_VERSION}"
+   "-D${PROJECT_NAME}_MINOR_VERSION=${${PROJECT_NAME}_MINOR_VERSION}"
+   "-D${PROJECT_NAME}_PATCH_VERSION=${${PROJECT_NAME}_PATCH_VERSION}"
   #"-DUA_ENABLE_GENERATE_NAMESPACE0=On"
   #"-DUA_ENABLE_ENABLE_MULTITHREADING=ON"
-   #PATCH_COMMAND git apply < ${PROJECT_SOURCE_DIR}/locale.patch
+   PATCH_COMMAND git apply < ${PROJECT_SOURCE_DIR}/cmakefile.patch
   )
 #add_custom_target(copyOpen62541Header ALL
 #                DEPENDS external-open62541
@@ -64,9 +68,12 @@ include(ExternalProject)
 
 #add_library(${PROJECT_NAME} ${CMAKE_BINARY_DIR}/open62541_src/src/external-open62541-build/open62541.c)
 #add_dependencies(${PROJECT_NAME} external-open62541)
+#add_library(${PROJECT_NAME} SHARED IMPORTED)
+#set_property(TARGET ${PROJECT_NAME} PROPERTY IMPORTED_LOCATION ${CMAKE_BINARY_DIR}/open62541_install/lib/)
 #install(TARGETS ${PROJECT_NAME} DESTINATION include/${PROJECT_NAME})
 
-#install(FILES ${CMAKE_BINARY_DIR}/open62541_src/src/external-open62541-build/open62541.h DESTINATION include/${PROJECT_NAME})
+install(FILES ${CMAKE_BINARY_DIR}/open62541_install/include/open62541.h DESTINATION include)
+install(DIRECTORY ${CMAKE_BINARY_DIR}/open62541_install/lib/ DESTINATION lib )
 
 
 include(${CMAKE_SOURCE_DIR}/cmake/create_cmake_config_files.cmake)
