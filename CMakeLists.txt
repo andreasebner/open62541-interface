@@ -61,9 +61,9 @@ include(ExternalProject)
 #  set(${PROJECT_NAME}_SOVERSION "${${PROJECT_NAME}_SOVERSION}${${PROJECT_NAME}_BUILDVERSION}")
 #endif( ${PROJECT_NAME}_BUILDVERSION )
 
-add_library(${PROJECT_NAME} ${CMAKE_BINARY_DIR}/open62541_src/src/external-open62541-build/open62541.c)
-add_dependencies(${PROJECT_NAME} external-open62541)
-install(TARGETS ${PROJECT_NAME} DESTINATION include/${PROJECT_NAME})
+#add_library(${PROJECT_NAME} ${CMAKE_BINARY_DIR}/open62541_src/src/external-open62541-build/open62541.c)
+#add_dependencies(${PROJECT_NAME} external-open62541)
+#install(TARGETS ${PROJECT_NAME} DESTINATION include/${PROJECT_NAME})
 
 install(FILES ${CMAKE_BINARY_DIR}/open62541_src/src/external-open62541-build/open62541.h DESTINATION include/${PROJECT_NAME})
 
