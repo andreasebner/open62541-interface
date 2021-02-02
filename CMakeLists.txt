@@ -1,5 +1,5 @@
 project(open62541-interface)
-cmake_minimum_required(VERSION 3.19)
+cmake_minimum_required(VERSION 3.5)
 
 SET(${PROJECT_NAME}_MAJOR_VERSION 00)
 SET(${PROJECT_NAME}_MINOR_VERSION 01)
