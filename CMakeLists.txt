@@ -23,7 +23,7 @@ include(ExternalProject)
   #"-DUA_ENABLE_ENABLE_MULTITHREADING=ON"
    "-DUA_LOGLEVEL=300"
    "-DCMAKE_BUILD_TYPE=DEBUG"
-   PATCH_COMMAND git apply < ${PROJECT_SOURCE_DIR}/locale.patch
+   #PATCH_COMMAND git apply < ${PROJECT_SOURCE_DIR}/locale.patch
   )
 #add_custom_target(copyOpen62541Header ALL
 #                DEPENDS external-open62541
