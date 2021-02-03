@@ -25,7 +25,7 @@ index 3a5e861..de4d770 100644
 +                removeCp(cpLast, session);
 +            }
 +        }
-+ 
++
          /* create a cp */
          if(session->availableContinuationPoints <= 0 ||
             !(cp = UA_malloc(sizeof(struct ContinuationPointEntry)))) {
