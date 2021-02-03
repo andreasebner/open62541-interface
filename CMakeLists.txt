@@ -1,9 +1,9 @@
-project(open62541-interface)
+project(open62541)
 cmake_minimum_required(VERSION 3.5)
 
-SET(${PROJECT_NAME}_MAJOR_VERSION 00)
-SET(${PROJECT_NAME}_MINOR_VERSION 01)
-SET(${PROJECT_NAME}_PATCH_VERSION 00)
+SET(${PROJECT_NAME}_MAJOR_VERSION 0)
+SET(${PROJECT_NAME}_MINOR_VERSION 2)
+SET(${PROJECT_NAME}_PATCH_VERSION 2-1)
 include(${CMAKE_SOURCE_DIR}/cmake/set_version_numbers.cmake)
 
 include(ExternalProject)
@@ -30,14 +30,14 @@ include(ExternalProject)
    "-D${PROJECT_NAME}_BUILDVERSION=${${PROJECT_NAME}_BUILDVERSION}"
   #"-DUA_ENABLE_GENERATE_NAMESPACE0=On"
   #"-DUA_ENABLE_ENABLE_MULTITHREADING=ON"
-   PATCH_COMMAND git apply ${PROJECT_SOURCE_DIR}/cmakefile.patch
-   ${PROJECT_SOURCE_DIR}/bugfix1.patch
-   ${PROJECT_SOURCE_DIR}/bugfix2.patch
-   ${PROJECT_SOURCE_DIR}/bugfix3.patch
-   ${PROJECT_SOURCE_DIR}/bugfix4.patch
-   ${PROJECT_SOURCE_DIR}/bugfix5.patch
-   ${PROJECT_SOURCE_DIR}/bugfix6.patch
-   ${PROJECT_SOURCE_DIR}/connectionState.patch
+   #PATCH_COMMAND git apply ${PROJECT_SOURCE_DIR}/cmakefile.patch
+   #${PROJECT_SOURCE_DIR}/bugfix1.patch
+   #${PROJECT_SOURCE_DIR}/bugfix2.patch
+   #${PROJECT_SOURCE_DIR}/bugfix3.patch
+   #${PROJECT_SOURCE_DIR}/bugfix4.patch
+   #${PROJECT_SOURCE_DIR}/bugfix5.patch
+   #${PROJECT_SOURCE_DIR}/bugfix6.patch
+   #${PROJECT_SOURCE_DIR}/connectionState.patch
   )
 install(FILES ${CMAKE_BINARY_DIR}/open62541_install/include/open62541.h DESTINATION include)
 install(DIRECTORY ${CMAKE_BINARY_DIR}/open62541_install/lib/ DESTINATION lib )
