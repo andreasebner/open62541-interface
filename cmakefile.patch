@@ -1,14 +1,15 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 5e95ad2..0c644f5 100644
+index 5e95ad2..15d06f1 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -10,10 +10,11 @@ find_package(Git)
+@@ -10,10 +10,12 @@ find_package(Git)
  # Version #
  ###########
  
 -set(OPEN62541_VER_MAJOR 0)
 -set(OPEN62541_VER_MINOR 2)
 -set(OPEN62541_VER_PATCH 2)
++message(STATUS "Parent project name: ${CMAKE_PROJECT_NAME}")
 +set(OPEN62541_VER_MAJOR ${${CMAKE_PROJECT_NAME}_MAJOR_VERSION})
 +set(OPEN62541_VER_MINOR ${${CMAKE_PROJECT_NAME}_MINOR_VERSION})
 +set(OPEN62541_VER_PATCH ${${CMAKE_PROJECT_NAME}_PATCH_VERSION})
@@ -17,7 +18,7 @@ index 5e95ad2..0c644f5 100644
  
  set(LIB_INSTALL_DIR lib CACHE PATH "Installation path of libraries")
  
-@@ -405,7 +406,7 @@ if(UA_ENABLE_AMALGAMATION)
+@@ -405,7 +407,7 @@ if(UA_ENABLE_AMALGAMATION)
                       )
  
  
@@ -26,7 +27,7 @@ index 5e95ad2..0c644f5 100644
  
      if(UA_COMPILE_AS_CXX)
          set_source_files_properties(${PROJECT_BINARY_DIR}/open62541.c PROPERTIES LANGUAGE CXX)
-@@ -444,16 +445,18 @@ endif()
+@@ -444,16 +446,18 @@ endif()
  
  # Export Symbols
  target_compile_definitions(open62541-object PRIVATE -DUA_DYNAMIC_LINKING_EXPORT)
@@ -49,7 +50,7 @@ index 5e95ad2..0c644f5 100644
  
  ##########################
  # Build Selected Targets #
-@@ -505,7 +508,7 @@ add_dependencies(lint open62541)
+@@ -505,7 +509,7 @@ add_dependencies(lint open62541)
  # Enable shared library with `-DBUILD_SHARED_LIBS=ON`
  
  # export library (either static or shared depending on BUILD_SHARED_LIBS)
