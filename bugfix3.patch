@@ -1,5 +1,5 @@
 diff --git a/plugins/ua_network_tcp.c b/plugins/ua_network_tcp.c
-index 6f27020..96e3329 100644
+index 6f27020..bf47c4d 100644
 --- a/plugins/ua_network_tcp.c
 +++ b/plugins/ua_network_tcp.c
 @@ -395,8 +395,8 @@ ServerNetworkLayerTCP_start(UA_ServerNetworkLayer *nl, UA_Logger logger) {
@@ -12,3 +12,18 @@ index 6f27020..96e3329 100644
  
      /* Create the server socket */
      SOCKET newsock = socket(PF_INET, SOCK_STREAM, 0);
+@@ -735,12 +735,12 @@ UA_ClientConnectionTCP(UA_ConnectionConfig conf, const char *endpointUrl,
+                        NULL, WSAGetLastError(),
+                        MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+                        (LPWSTR)&s, 0, NULL);
+-        UA_LOG_WARNING(logger, UA_LOGCATEGORY_NETWORK,
++        UA_LOG_DEBUG(logger, UA_LOGCATEGORY_NETWORK,
+                        "Connection to %s failed. Error: %d: %S",
+                        endpointUrl, WSAGetLastError(), s);
+         LocalFree(s);
+ #else
+-        UA_LOG_WARNING(logger, UA_LOGCATEGORY_NETWORK,
++        UA_LOG_DEBUG(logger, UA_LOGCATEGORY_NETWORK,
+                        "Connection to %s failed. Error: %d: %s",
+                        endpointUrl, errno, strerror(errno));
+ #endif
