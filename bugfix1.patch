@@ -1,0 +1,14 @@
+diff --git a/src/ua_types.c b/src/ua_types.c
+index 58d129e..2657e76 100644
+--- a/src/ua_types.c
++++ b/src/ua_types.c
+@@ -40,7 +40,8 @@ UA_findDataType(const UA_NodeId *typeId) {
+ /* Random Number Generator */
+ /***************************/
+ 
+-static UA_THREAD_LOCAL pcg32_random_t UA_rng = PCG32_INITIALIZER;
++//static UA_THREAD_LOCAL pcg32_random_t UA_rng = PCG32_INITIALIZER;
++static pcg32_random_t UA_rng = PCG32_INITIALIZER;
+ 
+ void
+ UA_random_seed(UA_UInt64 seed) {
