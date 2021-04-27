@@ -2,14 +2,14 @@ project(open62541)
 cmake_minimum_required(VERSION 3.5)
 
 SET(${PROJECT_NAME}_MAJOR_VERSION 1)
-SET(${PROJECT_NAME}_MINOR_VERSION 1)
-SET(${PROJECT_NAME}_PATCH_VERSION 3)
+SET(${PROJECT_NAME}_MINOR_VERSION 2)
+SET(${PROJECT_NAME}_PATCH_VERSION 1)
 include(${CMAKE_SOURCE_DIR}/cmake/set_version_numbers.cmake)
 
 include(ExternalProject)
  ExternalProject_Add(external-open62541
    GIT_REPOSITORY "https://github.com/open62541/open62541.git"
-   GIT_TAG "v1.1.3"
+   GIT_TAG "v1.2.1"
    PREFIX "${CMAKE_BINARY_DIR}/open62541_src"
    CMAKE_ARGS
    "-DCMAKE_PROJECT_NAME=${PROJECT_NAME}"
