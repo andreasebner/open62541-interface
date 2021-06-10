@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.5)
 
 SET(${PROJECT_NAME}_MAJOR_VERSION 0)
 SET(${PROJECT_NAME}_MINOR_VERSION 2)
-SET(${PROJECT_NAME}_PATCH_VERSION 2-1)
+SET(${PROJECT_NAME}_PATCH_VERSION 2-2)
 include(${CMAKE_SOURCE_DIR}/cmake/set_version_numbers.cmake)
 
 include(ExternalProject)
@@ -37,6 +37,7 @@ include(ExternalProject)
   ${PROJECT_SOURCE_DIR}/bugfix4.patch
   ${PROJECT_SOURCE_DIR}/bugfix5.patch
   ${PROJECT_SOURCE_DIR}/bugfix6.patch
+  ${PROJECT_SOURCE_DIR}/bugfix7.patch
   ${PROJECT_SOURCE_DIR}/connectionState.patch
   )
 install(FILES ${CMAKE_BINARY_DIR}/open62541_install/include/open62541.h DESTINATION include)
