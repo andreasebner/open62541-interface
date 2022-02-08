@@ -1,0 +1,3 @@
+@Library('ChimeraTK') _
+env.DISABLE_CPPCHECK="yes"
+autojob([], 'https://github.com/ChimeraTK/open62541-interface')
