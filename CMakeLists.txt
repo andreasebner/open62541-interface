@@ -35,16 +35,7 @@ install(DIRECTORY ${CMAKE_BINARY_DIR}/open62541_install/include/ DESTINATION inc
 install(DIRECTORY ${CMAKE_BINARY_DIR}/open62541_install/lib/ DESTINATION lib )
 install(DIRECTORY ${CMAKE_BINARY_DIR}/open62541_install/share/ DESTINATION share )
 
-#set(${PROJECT_NAME}_INCLUDE_DIRS "${CMAKE_INSTALL_PREFIX}/include ${Boost_INCLUDE_DIRS}")
-#set(${PROJECT_NAME}_LIBRARIES "open62541::open62541")
-#set(${PROJECT_NAME}_LIBRARY_DIRS "${CMAKE_INSTALL_PREFIX}/lib")
-#if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-#set(${PROJECT_NAME}_LINKER_FLAGS "-Wl,-rpath,${CMAKE_INSTALL_PREFIX}/lib ${ChimeraTK-DeviceAccess_LINKER_FLAGS}")
-#else()
-#set(${PROJECT_NAME}_LINKER_FLAGS "-Wl,-rpath=${CMAKE_INSTALL_PREFIX}/lib,--enable-new-dtags ${ChimeraTK-DeviceAccess_LINKER_FLAGS}")
-#endif()
-#list(APPEND ${PROJECT_NAME}_PUBLIC_DEPENDENCIES "Boost COMPONENTS system thread filesystem date_time atomic chrono")
-#include(${CMAKE_SOURCE_DIR}/cmake/create_cmake_config_files.cmake)
+include(${CMAKE_SOURCE_DIR}/cmake/create_cmake_config_files.cmake)
 
 ##########################
 # Packaging              #
