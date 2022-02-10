@@ -1,7 +1,16 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 9184b943..78d41df0 100644
+index 9184b943..a9bb132e 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
+@@ -1289,7 +1289,7 @@ if(UA_ENABLE_DISCOVERY_MULTICAST)
+     target_compile_definitions(open62541 PRIVATE -DMDNSD_DYNAMIC_LINKING_EXPORT)
+ endif()
+ # Generate properly versioned shared library links on Linux
+-SET_TARGET_PROPERTIES(open62541 PROPERTIES SOVERSION "${OPEN62541_VER_MAJOR}" VERSION "${OPEN62541_VER_MAJOR}.${OPEN62541_VER_MINOR}.${OPEN62541_VER_PATCH}")
++SET_TARGET_PROPERTIES(open62541 PROPERTIES SOVERSION "${OPEN62541_VER_MAJOR}.${OPEN62541_VER_MINOR}${PROJECT_BUILD_VERSION}" VERSION "${OPEN62541_VER_MAJOR}.${OPEN62541_VER_MINOR}${PROJECT_BUILD_VERSION}.${OPEN62541_VER_PATCH}-${PROJECT_REVISION}")
+ 
+ ##################################
+ #     Architectures changes      #
 @@ -1361,7 +1361,7 @@ include(linting_target)
  # specify install location with `-DCMAKE_INSTALL_PREFIX=xyz`
  # Enable shared library with `-DBUILD_SHARED_LIBS=ON`
