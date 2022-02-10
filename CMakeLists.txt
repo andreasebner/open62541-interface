@@ -5,7 +5,7 @@ SET(${PROJECT_NAME}_MAJOR_VERSION 1)
 SET(${PROJECT_NAME}_MINOR_VERSION 2)
 SET(${PROJECT_NAME}_PATCH_VERSION 1)
 include(${CMAKE_SOURCE_DIR}/cmake/set_version_numbers.cmake)
-set(${PROJECT_NAME}_REVISION 2)
+set(${PROJECT_NAME}_REVISION 3)
 
 include(ExternalProject)
  ExternalProject_Add(external-open62541
@@ -28,11 +28,23 @@ include(ExternalProject)
    "-D${PROJECT_NAME}_BUILDVERSION=${${PROJECT_NAME}_BUILDVERSION}"
   #"-DUA_ENABLE_GENERATE_NAMESPACE0=On"
   #"-DUA_ENABLE_ENABLE_MULTITHREADING=ON"
+   PATCH_COMMAND git apply ${PROJECT_SOURCE_DIR}/cmakefile.patch
   )
 
 install(DIRECTORY ${CMAKE_BINARY_DIR}/open62541_install/include/ DESTINATION include)
 install(DIRECTORY ${CMAKE_BINARY_DIR}/open62541_install/lib/ DESTINATION lib )
 install(DIRECTORY ${CMAKE_BINARY_DIR}/open62541_install/share/ DESTINATION share )
+
+#set(${PROJECT_NAME}_INCLUDE_DIRS "${CMAKE_INSTALL_PREFIX}/include ${Boost_INCLUDE_DIRS}")
+#set(${PROJECT_NAME}_LIBRARIES "open62541::open62541")
+#set(${PROJECT_NAME}_LIBRARY_DIRS "${CMAKE_INSTALL_PREFIX}/lib")
+#if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+#set(${PROJECT_NAME}_LINKER_FLAGS "-Wl,-rpath,${CMAKE_INSTALL_PREFIX}/lib ${ChimeraTK-DeviceAccess_LINKER_FLAGS}")
+#else()
+#set(${PROJECT_NAME}_LINKER_FLAGS "-Wl,-rpath=${CMAKE_INSTALL_PREFIX}/lib,--enable-new-dtags ${ChimeraTK-DeviceAccess_LINKER_FLAGS}")
+#endif()
+#list(APPEND ${PROJECT_NAME}_PUBLIC_DEPENDENCIES "Boost COMPONENTS system thread filesystem date_time atomic chrono")
+#include(${CMAKE_SOURCE_DIR}/cmake/create_cmake_config_files.cmake)
 
 ##########################
 # Packaging              #
