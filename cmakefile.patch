@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 9184b943..a9bb132e 100644
+index 9184b943..106ed274 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -1289,7 +1289,7 @@ if(UA_ENABLE_DISCOVERY_MULTICAST)
@@ -16,10 +16,28 @@ index 9184b943..a9bb132e 100644
  # Enable shared library with `-DBUILD_SHARED_LIBS=ON`
  
 -set(cmake_configfile_install ${CMAKE_INSTALL_LIBDIR}/cmake/open62541)
-+set(cmake_configfile_install share/cmake-3.16/Modules)
++set(cmake_configfile_install share/cmake-${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}/Modules)
  set(open62541_install_tools_dir share/open62541/tools)
  set(open62541_install_nodeset_dir share/open62541/tools/ua-nodeset)
  
+@@ -1433,7 +1433,7 @@ endif()
+ 
+ include(CMakePackageConfigHelpers)
+ configure_package_config_file("${CMAKE_CURRENT_SOURCE_DIR}/tools/cmake/open62541Config.cmake.in"
+-                              "${CMAKE_CURRENT_BINARY_DIR}/open62541Config.cmake"
++                              "${CMAKE_CURRENT_BINARY_DIR}/Findopen62541.cmake"
+                               INSTALL_DESTINATION "${cmake_configfile_install}"
+                               PATH_VARS open62541_install_tools_dir
+                                         open62541_install_nodeset_dir
+@@ -1460,7 +1460,7 @@ export(
+ 
+ configure_file("${CMAKE_CURRENT_SOURCE_DIR}/tools/cmake/macros_public.cmake" "${CMAKE_CURRENT_BINARY_DIR}/open62541Macros.cmake" COPYONLY)
+ 
+-install(FILES "${CMAKE_CURRENT_BINARY_DIR}/open62541Config.cmake"
++install(FILES "${CMAKE_CURRENT_BINARY_DIR}/Findopen62541.cmake"
+               "${CMAKE_CURRENT_BINARY_DIR}/open62541ConfigVersion.cmake"
+               "${CMAKE_CURRENT_BINARY_DIR}/open62541Macros.cmake"
+         DESTINATION "${cmake_configfile_install}")
 @@ -1472,7 +1472,7 @@ endif()
  
  if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")

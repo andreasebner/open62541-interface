@@ -7,7 +7,7 @@ SET(${PROJECT_NAME}_MAJOR_VERSION 1)
 SET(${PROJECT_NAME}_MINOR_VERSION 2)
 SET(${PROJECT_NAME}_PATCH_VERSION 1)
 include(${CMAKE_SOURCE_DIR}/cmake/set_version_numbers.cmake)
-set(${PROJECT_NAME}_REVISION 3)
+set(${PROJECT_NAME}_REVISION 4)
 message(STATUS "Version number: ${${PROJECT_NAME}_FULL_LIBRARY_VERSION}")
 
 include(ExternalProject)
@@ -35,8 +35,8 @@ include(ExternalProject)
 install(DIRECTORY ${CMAKE_BINARY_DIR}/open62541_install/include/ DESTINATION include)
 install(DIRECTORY ${CMAKE_BINARY_DIR}/open62541_install/lib/ DESTINATION lib )
 install(DIRECTORY ${CMAKE_BINARY_DIR}/open62541_install/share/ DESTINATION share )
-
-include(${CMAKE_SOURCE_DIR}/cmake/create_cmake_config_files.cmake)
+configure_file(${PROJECT_SOURCE_DIR}/open62541-config.in "${PROJECT_BINARY_DIR}/open62541-config" @ONLY)
+install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/open62541-config DESTINATION bin COMPONENT dev)
 
 ##########################
 # Packaging              #
