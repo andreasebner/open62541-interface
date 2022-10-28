@@ -7,7 +7,7 @@ SET(${PROJECT_NAME}_MAJOR_VERSION 1)
 SET(${PROJECT_NAME}_MINOR_VERSION 3)
 SET(${PROJECT_NAME}_PATCH_VERSION 3)
 include(${CMAKE_SOURCE_DIR}/cmake/set_version_numbers.cmake)
-set(${PROJECT_NAME}_REVISION 4)
+set(${PROJECT_NAME}_REVISION 1)
 message(STATUS "Version number: ${${PROJECT_NAME}_FULL_LIBRARY_VERSION}")
 
 include(ExternalProject)
