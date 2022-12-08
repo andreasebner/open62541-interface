@@ -1,0 +1,46 @@
+diff --git a/src/server/ua_services_monitoreditem.c b/src/server/ua_services_monitoreditem.c
+index 5b62be801..d861f2871 100644
+--- a/src/server/ua_services_monitoreditem.c
++++ b/src/server/ua_services_monitoreditem.c
+@@ -144,7 +144,8 @@ static UA_StatusCode
+ checkAdjustMonitoredItemParams(UA_Server *server, UA_Session *session,
+                                const UA_MonitoredItem *mon,
+                                const UA_DataType* valueType,
+-                               UA_MonitoringParameters *params) {
++                               UA_MonitoringParameters *params,
++                               UA_Double pubInterval) {
+     UA_LOCK_ASSERT(&server->serviceMutex, 1);
+ 
+     /* Check the filter */
+@@ -219,8 +220,11 @@ checkAdjustMonitoredItemParams(UA_Server *server, UA_Session *session,
+     }
+         
+     /* Adjust to sampling interval to lie within the limits */
+-    if(params->samplingInterval <= 0.0) {
+-        /* A sampling interval of zero is possible and indicates that the
++    if(params->samplingInterval < 0.0) {
++				// Use publishing interval as specified in chapter 4 section 7.21
++        params->samplingInterval = pubInterval;
++    } else if (params->samplingInterval == 0) {
++      /* A sampling interval of zero is possible and indicates that the
+          * MonitoredItem is checked for every write operation */
+         params->samplingInterval = 0.0;
+     } else {
+@@ -445,7 +449,7 @@ Operation_CreateMonitoredItem(UA_Server *server, UA_Session *session,
+     result->statusCode |= UA_MonitoringParameters_copy(&request->requestedParameters,
+                                                        &newMon->parameters);
+     result->statusCode |= checkAdjustMonitoredItemParams(server, session, newMon,
+-                                                         valueType, &newMon->parameters);
++                                                         valueType, &newMon->parameters, cmc->sub->publishingInterval);
+ #ifdef UA_ENABLE_SUBSCRIPTIONS_EVENTS
+     result->statusCode |= checkEventFilterParam(server, session, newMon,
+                                                          &newMon->parameters);
+@@ -577,7 +581,7 @@ Operation_ModifyMonitoredItem(UA_Server *server, UA_Session *session, UA_Subscri
+      * MonitoredItem untouched. */
+     result->statusCode =
+         checkAdjustMonitoredItemParams(server, session, mon,
+-                                       v.value.type, &params);
++                                       v.value.type, &params, sub->publishingInterval);
+     UA_DataValue_clear(&v);
+     if(result->statusCode != UA_STATUSCODE_GOOD) {
+         UA_MonitoringParameters_clear(&params);
