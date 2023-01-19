@@ -7,8 +7,15 @@ SET(${PROJECT_NAME}_MAJOR_VERSION 1)
 SET(${PROJECT_NAME}_MINOR_VERSION 3)
 SET(${PROJECT_NAME}_PATCH_VERSION 3)
 include(${CMAKE_SOURCE_DIR}/cmake/set_version_numbers.cmake)
-set(${PROJECT_NAME}_REVISION 3)
+set(${PROJECT_NAME}_REVISION 4)
 message(STATUS "Version number: ${${PROJECT_NAME}_FULL_LIBRARY_VERSION}")
+
+if(${CMAKE_VERSION} VERSION_LESS "3.18.0") 
+    message(STATUS "No update step will be applied.")
+    set(UPDATESTRING "echo 'Nothing to do'")
+else()
+    set(UPDATESTRING "git checkout *")
+endif()
 
 include(ExternalProject)
  ExternalProject_Add(external-open62541
@@ -33,7 +40,7 @@ include(ExternalProject)
   #"-DUA_ENABLE_ENABLE_MULTITHREADING=ON"
    PATCH_COMMAND git apply ${PROJECT_SOURCE_DIR}/cmakefile.patch
                            ${PROJECT_SOURCE_DIR}/FixForZeroSamplingInterval.patch
-   UPDATE_COMMAND echo "Nothing to do in update step."
+   UPDATE_COMMAND bash -c ${UPDATESTRING}
   )
 
 install(DIRECTORY ${CMAKE_BINARY_DIR}/open62541_install/include/ DESTINATION include)
