@@ -40,6 +40,7 @@ include(ExternalProject)
   #"-DUA_ENABLE_ENABLE_MULTITHREADING=ON"
    PATCH_COMMAND git apply ${PROJECT_SOURCE_DIR}/cmakefile.patch
                            ${PROJECT_SOURCE_DIR}/FixForZeroSamplingInterval.patch
+                           ${PROJECT_SOURCE_DIR}/SkipFirstHistoryEntry.patch
    UPDATE_COMMAND bash -c ${UPDATESTRING}
   )
 
