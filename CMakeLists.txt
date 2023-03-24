@@ -46,7 +46,9 @@ include(ExternalProject)
   )
 
 install(DIRECTORY ${CMAKE_BINARY_DIR}/open62541_install/include/ DESTINATION include)
-install(DIRECTORY ${CMAKE_BINARY_DIR}/open62541_install/lib/ DESTINATION lib )
+# this defines architecture-dependent ${CMAKE_INSTALL_LIBDIR}
+include(GNUInstallDirs)
+install(DIRECTORY ${CMAKE_BINARY_DIR}/open62541_install/${CMAKE_INSTALL_LIBDIR}/ DESTINATION ${CMAKE_INSTALL_LIBDIR} )
 install(DIRECTORY ${CMAKE_BINARY_DIR}/open62541_install/share/ DESTINATION share )
 configure_file(${PROJECT_SOURCE_DIR}/open62541-config.in "${PROJECT_BINARY_DIR}/open62541-config" @ONLY)
 install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/open62541-config DESTINATION bin COMPONENT dev)
