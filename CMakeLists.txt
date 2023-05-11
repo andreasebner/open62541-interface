@@ -5,7 +5,7 @@ SET(${PROJECT_NAME}_MAJOR_VERSION 1)
 SET(${PROJECT_NAME}_MINOR_VERSION 3)
 SET(${PROJECT_NAME}_PATCH_VERSION 3)
 include(${CMAKE_SOURCE_DIR}/cmake/set_version_numbers.cmake)
-set(${PROJECT_NAME}_REVISION 9)
+set(${PROJECT_NAME}_REVISION 8)
 message(STATUS "Version number: ${${PROJECT_NAME}_FULL_LIBRARY_VERSION}")
 
 if(${CMAKE_VERSION} VERSION_LESS "3.18.0") 
@@ -15,44 +15,68 @@ else()
     set(UPDATESTRING "git checkout *")
 endif()
 
-include(ExternalProject)
- ExternalProject_Add(external-open62541
-   GIT_REPOSITORY "https://github.com/open62541/open62541.git"
-   GIT_TAG "v1.3.3"
-   PREFIX "${CMAKE_BINARY_DIR}/open62541_src"
-   CMAKE_ARGS
-   "-DCMAKE_PROJECT_NAME=${PROJECT_NAME}"
-   "-DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/open62541_install"
-   "-DUA_ENABLE_AMALGAMATION=Off"
-   "-DBUILD_SHARED_LIBS=ON"
-   "-DUA_ENABLE_METHODCALLS=ON"
-   "-DUA_ENABLE_NODEMANAGEMENT=ON"
-   "-DUA_ENABLE_SUBSCRIPTIONS=ON"
-   "-DUA_LOGLEVEL=300"
-   "-DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}"
-   "-DPROJECT_BUILD_VERSION=$ENV{PROJECT_BUILDVERSION}"
-   "-DPROJECT_REVISION=${${PROJECT_NAME}_REVISION}"
-   "-DUA_ENABLE_ENCRYPTION=MBEDTLS"
-   "-DUA_ENABLE_HISTORIZING=ON"
-  #"-DUA_ENABLE_GENERATE_NAMESPACE0=On"
-  #"-DUA_ENABLE_ENABLE_MULTITHREADING=ON"
-   PATCH_COMMAND git apply ${PROJECT_SOURCE_DIR}/cmakefile.patch
-                           ${PROJECT_SOURCE_DIR}/FixForZeroSamplingInterval.patch
-                           ${PROJECT_SOURCE_DIR}/SkipFirstHistoryEntry.patch
-                           ${PROJECT_SOURCE_DIR}/RemovePythonDependency.patch
-   UPDATE_COMMAND bash -c ${UPDATESTRING}
-  )
+include(cmake/set_default_build_to_release.cmake)
 
-install(DIRECTORY ${CMAKE_BINARY_DIR}/open62541_install/include/ DESTINATION include)
+include(ExternalProject)
+# setting -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX} works in principle and the temporary install to ${CMAKE_BINARY_DIR}/open62541_install
+# is not required. 
+# However in the debian packaging scripts installing the external project to /usr/ is not allowed - permission denied...
+ExternalProject_Add(external-open62541
+  GIT_REPOSITORY "https://github.com/open62541/open62541.git"
+  GIT_TAG "v1.3.3"
+  PREFIX "${CMAKE_BINARY_DIR}/open62541_src"
+  CMAKE_ARGS
+  "-DCMAKE_PROJECT_NAME=${PROJECT_NAME}"
+  "-DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/open62541_install"
+  "-DUA_ENABLE_AMALGAMATION=Off"
+  "-DBUILD_SHARED_LIBS=ON"
+  "-DUA_ENABLE_METHODCALLS=ON"
+  "-DUA_ENABLE_NODEMANAGEMENT=ON"
+  "-DUA_ENABLE_SUBSCRIPTIONS=ON"
+  "-DUA_LOGLEVEL=300"
+  "-DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}"
+  "-DPROJECT_BUILD_VERSION=$ENV{PROJECT_BUILDVERSION}"
+  "-DPROJECT_REVISION=${${PROJECT_NAME}_REVISION}"
+  "-DUA_ENABLE_ENCRYPTION=MBEDTLS"
+  "-DUA_ENABLE_HISTORIZING=ON"
+ #"-DUA_ENABLE_GENERATE_NAMESPACE0=On"
+ #"-DUA_ENABLE_ENABLE_MULTITHREADING=ON"
+  PATCH_COMMAND git apply ${PROJECT_SOURCE_DIR}/cmakefile.patch
+                          ${PROJECT_SOURCE_DIR}/FixForZeroSamplingInterval.patch
+                          ${PROJECT_SOURCE_DIR}/SkipFirstHistoryEntry.patch
+                          ${PROJECT_SOURCE_DIR}/RemovePythonDependency.patch
+  UPDATE_COMMAND bash -c ${UPDATESTRING}
+)
+
 # this defines architecture-dependent ${CMAKE_INSTALL_LIBDIR}
 include(GNUInstallDirs)
-# unfortunately, when  ${CMAKE_INSTALL_LIBDIR} evaluates to lib/<multiarch-tuple>, e.g. lib/x86_64-linux-gnu, the
-# last path part breaks relocatable cmake-config. So need to remove it.
-STRING(REGEX REPLACE "/.*$" "" CMAKE_INSTALL_LIBDIR ${CMAKE_INSTALL_LIBDIR})
-# source lib dir is also architecture-dependent, sometimes called lib64
-install(DIRECTORY ${CMAKE_BINARY_DIR}/open62541_install/lib/ OPTIONAL DESTINATION ${CMAKE_INSTALL_LIBDIR} )
-install(DIRECTORY ${CMAKE_BINARY_DIR}/open62541_install/lib64/ OPTIONAL DESTINATION ${CMAKE_INSTALL_LIBDIR} )
-install(DIRECTORY ${CMAKE_BINARY_DIR}/open62541_install/share/ DESTINATION share )
+add_custom_target(fix_cmake_config ALL 
+  DEPENDS external-open62541
+  COMMAND  ${CMAKE_CURRENT_SOURCE_DIR}/fix_cmake_config.sh ${CMAKE_BINARY_DIR}/open62541_install/lib/cmake/open62541 ${CMAKE_INSTALL_LIBDIR}
+)
+
+install(DIRECTORY ${CMAKE_BINARY_DIR}/open62541_install/include/ DESTINATION include)
+
+
+if(NOT (${CMAKE_INSTALL_LIBDIR} STREQUAL "lib") )
+  message(STATUS "Installing cmake configuration from open62541-interface project.")
+  install(DIRECTORY ${CMAKE_BINARY_DIR}/open62541_install/lib/ OPTIONAL DESTINATION ${CMAKE_INSTALL_LIBDIR} 
+          PATTERN "cmake" EXCLUDE)
+  # source lib dir is also architecture-dependent, sometimes called lib64
+  install(DIRECTORY ${CMAKE_BINARY_DIR}/open62541_install/lib64/ OPTIONAL DESTINATION ${CMAKE_INSTALL_LIBDIR} 
+          PATTERN "cmake" EXCLUDE)
+  install(DIRECTORY ${CMAKE_SOURCE_DIR}/cmake_config/ DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/open62541/)
+  install(DIRECTORY ${CMAKE_BINARY_DIR}/open62541_install/lib/cmake/open62541/ DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/open62541/ 
+          FILES_MATCHING PATTERN "open62541Targets-*")    
+else()
+  install(DIRECTORY ${CMAKE_BINARY_DIR}/open62541_install/lib/ OPTIONAL DESTINATION ${CMAKE_INSTALL_LIBDIR} )
+  # source lib dir is also architecture-dependent, sometimes called lib64
+  install(DIRECTORY ${CMAKE_BINARY_DIR}/open62541_install/lib64/ OPTIONAL DESTINATION ${CMAKE_INSTALL_LIBDIR} )
+endif()
+
+
+install(DIRECTORY ${CMAKE_BINARY_DIR}/open62541_install/share/ DESTINATION share 
+        PATTERN "open62541" EXCLUDE)
 configure_file(${PROJECT_SOURCE_DIR}/open62541-config.in "${PROJECT_BINARY_DIR}/open62541-config" @ONLY)
 install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/open62541-config DESTINATION bin COMPONENT dev)
 
