@@ -6,7 +6,10 @@ This package is used by ChimeraTK packages that make use of OPC UA. Currently th
 * ControlSystemAdapter-OPC-UA-Adapter
 * DeviceAccess-OPC-UA-Backend
 
-The idea is to provide a cmake interface that is identical to the offcial cmake interface. That allows to build the ChimeraTK packages that require OPC UA also against the offcial open6251 stack. 
+The idea is to provide a cmake interface that is identical to the official cmake interface. 
+That allows to build the ChimeraTK packages that require OPC UA also against the official open6251 stack. 
+In general the aim is to integrate the patches and features to the `open62541` project.
+But as long as this project includes patches or additional features building ChimeraTK packages against the official open62541 stack will result in a different behavior. 
 
 ## Cmake details
 
@@ -20,10 +23,9 @@ So this is not possible.
 With the solution of using a temporary install directory for the external project another problem arises.
 If an install prefix of `/usr` is used cmake creates different config files (e.g. `open62541Config.cmake`) as if another prefix is used. 
 Also the library install directory is different resulting from using `GNUInstallDirs` to determine the library install directory.
-So to build a proper debian package using the  DebianBuildScripts the install prefix has to be `/usr` but `open62541` is build with a different install prefix here
+So to build a proper debian package using the  DebianBuildScripts the install prefix has to be `/usr` but `open62541` is build with a different install prefix.
 Finally, the checks that are used to determine the integrity of the build debian package fail or projects using the open62541-interface will not find the library.
 
-To solve the problem, the `open62541` project was build locally once using `/usr` install prefix. The resulting cmake config files were included into this project
-and are used/installed if the install directory of the open62541-interface project is set to `/usr`. 
-Technically we test if the library directory is not `lib`, because if `/usr` is used as install prefix the library directory returned by  `GNUInstallDirs` is e.g. `lib/x86_64-linux-gnu`.
-If a different install prefix is used the original cmake config files created by the external project step are installed.
+To solve the problem, install step of the external project is modified to use set the environment variable `DESTDIR`, which points to the build directory. 
+Like that the external project can use the same install prefix as the open62541-interface project, i.e. `/usr` in case of building a debian package. 
+In the install step of the open62541-interface project a subset of the external project installation is copied from the binary directory to the install destination of the open62541-interface project.
