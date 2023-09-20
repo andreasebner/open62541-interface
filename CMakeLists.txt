@@ -48,7 +48,7 @@ ExternalProject_Add(external-open62541
   # is not required. 
   # However in the debian packaging scripts installing the external project to /usr/ is not allowed - permission denied...
   # In addition this allows to strip some files that we don't want to install with the interface here.
-  INSTALL_COMMAND make  DESTDIR=${CMAKE_BINARY_DIR}/open62541_install install
+  INSTALL_COMMAND DESTDIR=${CMAKE_BINARY_DIR}/open62541_install cmake --build . --target install
 )
 
 install(DIRECTORY ${CMAKE_BINARY_DIR}/open62541_install/${CMAKE_INSTALL_PREFIX}/include/ DESTINATION include)
