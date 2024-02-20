@@ -40,7 +40,6 @@ ExternalProject_Add(external-open62541
  #"-DUA_ENABLE_GENERATE_NAMESPACE0=On"
  #"-DUA_ENABLE_ENABLE_MULTITHREADING=ON"
   PATCH_COMMAND git apply ${PROJECT_SOURCE_DIR}/cmakefile.patch
-                          ${PROJECT_SOURCE_DIR}/FixForZeroSamplingInterval.patch
                           ${PROJECT_SOURCE_DIR}/SkipFirstHistoryEntry.patch
                           ${PROJECT_SOURCE_DIR}/RemovePythonDependency.patch
   UPDATE_COMMAND bash -c ${UPDATESTRING}
