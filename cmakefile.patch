@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 1934374ec..9c1bdc517 100644
+index 8b7c6678f..524921362 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -792,6 +792,16 @@ if(NOT UA_FORCE_CPP AND (CMAKE_COMPILER_IS_GNUCC OR "x${CMAKE_C_COMPILER_ID}" ST
+@@ -698,6 +698,16 @@ if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_C_COMPILER_ID STREQUAL "Clang")
              set(CMAKE_C_LINK_FLAGS "${CMAKE_C_LINK_FLAGS} -Wl,-z,norelro -Wl,--hash-style=gnu -Wl,--build-id=none")
          endif()
      endif()
@@ -19,16 +19,16 @@ index 1934374ec..9c1bdc517 100644
  endif()
  
  if(APPLE)
-@@ -1494,7 +1504,7 @@ if(UA_ENABLE_DISCOVERY_MULTICAST)
+@@ -1400,7 +1410,7 @@ if(UA_ENABLE_DISCOVERY_MULTICAST)
      target_compile_definitions(open62541 PRIVATE -DMDNSD_DYNAMIC_LINKING_EXPORT)
  endif()
  # Generate properly versioned shared library links on Linux
 -SET_TARGET_PROPERTIES(open62541 PROPERTIES SOVERSION "${OPEN62541_VER_MAJOR}" VERSION "${OPEN62541_VER_MAJOR}.${OPEN62541_VER_MINOR}.${OPEN62541_VER_PATCH}")
 +SET_TARGET_PROPERTIES(open62541 PROPERTIES SOVERSION "${OPEN62541_VER_MAJOR}.${OPEN62541_VER_MINOR}${PROJECT_BUILD_VERSION}" VERSION "${OPEN62541_VER_MAJOR}.${OPEN62541_VER_MINOR}${PROJECT_BUILD_VERSION}.${OPEN62541_VER_PATCH}-${PROJECT_REVISION}")
  
- ##################################
- #     Architectures changes      #
-@@ -1685,7 +1695,7 @@ endif()
+ # DLL requires linking to dependencies
+ target_link_libraries(open62541 ${open62541_LIBRARIES})
+@@ -1572,7 +1582,7 @@ endif()
  
  if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
      install(FILES "${PROJECT_BINARY_DIR}/src_generated/open62541.pc"
