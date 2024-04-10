@@ -1,13 +1,12 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 8b7c6678f..524921362 100644
+index 8b3c2cebc..33165a73e 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -698,6 +698,16 @@ if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_C_COMPILER_ID STREQUAL "Clang")
+@@ -697,6 +697,15 @@ if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_C_COMPILER_ID STREQUAL "Clang")
              set(CMAKE_C_LINK_FLAGS "${CMAKE_C_LINK_FLAGS} -Wl,-z,norelro -Wl,--hash-style=gnu -Wl,--build-id=none")
          endif()
      endif()
-+    
-+    # Add RelWithDebInfo, asan and tsan release types as used with ChimeraTK 
++    # Add RelWithDebInfo, asan and tsan release types as used with ChimeraTK
 +    message(STATUS "Cmake build type is set to: ${CMAKE_BUILD_TYPE}")
 +    set(CMAKE_CONFIGURATION_TYPES "Debug;Release;RelWithDebInfo;asan;tsan")
 +    set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -O3 -g")
@@ -19,7 +18,7 @@ index 8b7c6678f..524921362 100644
  endif()
  
  if(APPLE)
-@@ -1400,7 +1410,7 @@ if(UA_ENABLE_DISCOVERY_MULTICAST)
+@@ -1395,7 +1404,7 @@ if(UA_ENABLE_DISCOVERY_MULTICAST)
      target_compile_definitions(open62541 PRIVATE -DMDNSD_DYNAMIC_LINKING_EXPORT)
  endif()
  # Generate properly versioned shared library links on Linux
@@ -28,12 +27,12 @@ index 8b7c6678f..524921362 100644
  
  # DLL requires linking to dependencies
  target_link_libraries(open62541 ${open62541_LIBRARIES})
-@@ -1572,7 +1582,7 @@ endif()
- 
+@@ -1494,7 +1503,7 @@ export(TARGETS open62541 NAMESPACE open62541::
+ # Create open62541Targets.cmake
  if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
      install(FILES "${PROJECT_BINARY_DIR}/src_generated/open62541.pc"
 -            DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
 +            DESTINATION share/pkgconfig)
  endif()
  
- set(UA_install_tools_dirs "tools/certs"
+ # Recreate the include folder structure from the source also in /usr/lib/include/open62541
