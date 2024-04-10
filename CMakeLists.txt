@@ -21,7 +21,7 @@ include(ExternalProject)
 
 ExternalProject_Add(external-open62541
   GIT_REPOSITORY "https://github.com/open62541/open62541.git"
-  GIT_TAG "v1.4.0-rc2"
+  GIT_TAG "v1.4.0"
   PREFIX "${CMAKE_BINARY_DIR}/open62541_src"
   CMAKE_ARGS
   "-DCMAKE_PROJECT_NAME=${PROJECT_NAME}"
