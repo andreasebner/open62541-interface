@@ -49,10 +49,18 @@ ExternalProject_Add(external-open62541
   # INSTALL_COMMAND DESTDIR=${CMAKE_BINARY_DIR}/open62541_install cmake --build . --target install
 )
 
-install(DIRECTORY ${CMAKE_BINARY_DIR}/open62541_install/${CMAKE_INSTALL_PREFIX}/include/ DESTINATION include)
-install(DIRECTORY ${CMAKE_BINARY_DIR}/open62541_install/${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/ OPTIONAL DESTINATION ${CMAKE_INSTALL_LIBDIR} )
+#install(DIRECTORY ${CMAKE_BINARY_DIR}/open62541_install/${CMAKE_INSTALL_PREFIX}/include/ DESTINATION include)
+#install(DIRECTORY ${CMAKE_BINARY_DIR}/open62541_install/${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/ OPTIONAL DESTINATION ${CMAKE_INSTALL_LIBDIR} )
 # Do only install package config. Nodesets and python tools are not installed.
-install(DIRECTORY ${CMAKE_BINARY_DIR}/open62541_install/${CMAKE_INSTALL_PREFIX}/share/ DESTINATION share 
+#install(DIRECTORY ${CMAKE_BINARY_DIR}/open62541_install/${CMAKE_INSTALL_PREFIX}/share/ DESTINATION share 
+        PATTERN "open62541" EXCLUDE)
+#configure_file(${PROJECT_SOURCE_DIR}/open62541-config.in "${PROJECT_BINARY_DIR}/open62541-config" @ONLY)
+#install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/open62541-config DESTINATION bin COMPONENT dev)
+
+install(DIRECTORY ${CMAKE_INSTALL_PREFIX}/include/ DESTINATION include)
+install(DIRECTORY ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/ OPTIONAL DESTINATION ${CMAKE_INSTALL_LIBDIR} )
+# Do only install package config. Nodesets and python tools are not installed.
+install(DIRECTORY ${CMAKE_INSTALL_PREFIX}/share/ DESTINATION share 
         PATTERN "open62541" EXCLUDE)
 configure_file(${PROJECT_SOURCE_DIR}/open62541-config.in "${PROJECT_BINARY_DIR}/open62541-config" @ONLY)
 install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/open62541-config DESTINATION bin COMPONENT dev)
