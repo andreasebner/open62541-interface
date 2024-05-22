@@ -21,7 +21,7 @@ include(ExternalProject)
 
 ExternalProject_Add(external-open62541
   GIT_REPOSITORY "https://github.com/open62541/open62541.git"
-  GIT_TAG "v1.4.0"
+  GIT_TAG "1.4"
   PREFIX "${CMAKE_BINARY_DIR}/open62541_src"
   CMAKE_ARGS
   "-DCMAKE_PROJECT_NAME=${PROJECT_NAME}"
@@ -35,32 +35,25 @@ ExternalProject_Add(external-open62541
   "-DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}"
   "-DPROJECT_BUILD_VERSION=$ENV{PROJECT_BUILDVERSION}"
   "-DPROJECT_REVISION=${${PROJECT_NAME}_REVISION}"
-  #"-DUA_ENABLE_ENCRYPTION=MBEDTLS"
+  "-DUA_ENABLE_ENCRYPTION=MBEDTLS"
   "-DUA_ENABLE_HISTORIZING=ON"
  #"-DUA_ENABLE_GENERATE_NAMESPACE0=On"
  #"-DUA_ENABLE_ENABLE_MULTITHREADING=ON"
   PATCH_COMMAND git apply ${PROJECT_SOURCE_DIR}/cmakefile.patch
                           ${PROJECT_SOURCE_DIR}/SkipFirstHistoryEntry.patch
+                          ${PROJECT_SOURCE_DIR}/config.patch
   UPDATE_COMMAND bash -c ${UPDATESTRING}
   # setting -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX} works in principle and the temporary install to ${CMAKE_BINARY_DIR}/open62541_install
   # is not required. 
   # However in the debian packaging scripts installing the external project to /usr/ is not allowed - permission denied...
   # In addition this allows to strip some files that we don't want to install with the interface here.
-  # INSTALL_COMMAND DESTDIR=${CMAKE_BINARY_DIR}/open62541_install cmake --build . --target install
+  INSTALL_COMMAND DESTDIR=${CMAKE_BINARY_DIR}/open62541_install cmake --build . --target install
 )
 
-#install(DIRECTORY ${CMAKE_BINARY_DIR}/open62541_install/${CMAKE_INSTALL_PREFIX}/include/ DESTINATION include)
-#install(DIRECTORY ${CMAKE_BINARY_DIR}/open62541_install/${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/ OPTIONAL DESTINATION ${CMAKE_INSTALL_LIBDIR} )
+install(DIRECTORY ${CMAKE_BINARY_DIR}/open62541_install/${CMAKE_INSTALL_PREFIX}/include/ DESTINATION include)
+install(DIRECTORY ${CMAKE_BINARY_DIR}/open62541_install/${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/ OPTIONAL DESTINATION ${CMAKE_INSTALL_LIBDIR} )
 # Do only install package config. Nodesets and python tools are not installed.
-#install(DIRECTORY ${CMAKE_BINARY_DIR}/open62541_install/${CMAKE_INSTALL_PREFIX}/share/ DESTINATION share 
-#        PATTERN "open62541" EXCLUDE)
-#configure_file(${PROJECT_SOURCE_DIR}/open62541-config.in "${PROJECT_BINARY_DIR}/open62541-config" @ONLY)
-#install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/open62541-config DESTINATION bin COMPONENT dev)
-
-install(DIRECTORY ${CMAKE_INSTALL_PREFIX}/include/ DESTINATION include)
-install(DIRECTORY ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/ OPTIONAL DESTINATION ${CMAKE_INSTALL_LIBDIR} )
-# Do only install package config. Nodesets and python tools are not installed.
-install(DIRECTORY ${CMAKE_INSTALL_PREFIX}/share/ DESTINATION share 
+install(DIRECTORY ${CMAKE_BINARY_DIR}/open62541_install/${CMAKE_INSTALL_PREFIX}/share/ DESTINATION share 
         PATTERN "open62541" EXCLUDE)
 configure_file(${PROJECT_SOURCE_DIR}/open62541-config.in "${PROJECT_BINARY_DIR}/open62541-config" @ONLY)
 install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/open62541-config DESTINATION bin COMPONENT dev)
